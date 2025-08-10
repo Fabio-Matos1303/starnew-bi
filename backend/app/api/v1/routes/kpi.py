@@ -4,6 +4,7 @@ from fastapi import APIRouter, Query
 from sqlalchemy import text
 
 from ....core.database import get_sync_engine
+from ....core.cache import cache
 
 router = APIRouter(prefix="/kpi")
 class KpiGeralResponse(BaseModel):
@@ -30,6 +31,10 @@ def kpi_geral(
     to_: Optional[str] = Query(None, alias="to"),
 ):
     """KPIs gerais do período: receita total (vendas+OS+locações), participação, novos clientes e status de OS."""
+    cache_key = f"kpi_geral:{from_}:{to_}"
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return cached
     # Totais por área (cada consulta recebe seu próprio dict de params)
     params_v: Dict[str, str] = {}
     params_os: Dict[str, str] = {}
@@ -66,9 +71,12 @@ def kpi_geral(
     participacao = {"vendas": v, "os": o, "locacoes": l}
     os_status = {r["s"] or "": int(r["c"]) for r in rows}
 
-    return {
+    # monta resposta e armazena no cache por 60s
+    result = {
         "receita_total": receita_total,
         "participacao": participacao,
         "novos_clientes": novos,
         "os_status": os_status,
     }
+    cache.set(cache_key, result, ttl_seconds=60)
+    return result

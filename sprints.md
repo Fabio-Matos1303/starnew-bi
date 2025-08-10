@@ -38,7 +38,8 @@ Sprint 2 (em andamento) — Vendas
 Entrega parcial nesta sprint
 - API de Vendas implementada (3 endpoints) com filtros e validações
 - Tela `/vendas` implementada com KPIs e gráficos
-- Testes automatizados (10 testes) todos passando
+- Testes automatizados (13 testes) todos passando
+- Cache leve para KPI geral (TTL 60s)
 Plano de sprints (foco em valor contínuo e integrações com SINGRE)
 
   • Duração sugerida: 1 semana por sprint (ajuste conforme equipe/disponibilidade)
