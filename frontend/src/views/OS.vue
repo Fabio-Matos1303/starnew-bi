@@ -26,6 +26,10 @@
         <h3>Volume por dia</h3>
         <apexchart type="line" height="320" :options="volumeOptions" :series="volumeSeries" />
       </div>
+      <div>
+        <h3>Top serviços</h3>
+        <apexchart type="bar" height="320" :options="topServOptions" :series="topServSeries" />
+      </div>
       <div style="grid-column: 1 / -1">
         <h3>Listagem</h3>
         <div style="margin:8px 0; color:#666">Filtro status: <strong>{{ statusFilter || 'Todos' }}</strong></div>
@@ -74,6 +78,8 @@ const statusLabels = ref([])
 const volumeSeries = ref([{ name: 'OS', data: [] }])
 const volumeCats = ref([])
 const tmc = ref({ dias: null, amostras: 0 })
+const topServSeries = ref([{ name: 'Receita', data: [] }])
+const topServLabels = ref([])
 const items = ref([])
 const total = ref(0)
 const limit = ref(10)
@@ -90,6 +96,11 @@ const volumeOptions = computed(() => ({
   dataLabels: { enabled: false },
   stroke: { curve: 'smooth' }
 }))
+const topServOptions = computed(() => ({
+  xaxis: { categories: topServLabels.value },
+  dataLabels: { enabled: false },
+  plotOptions: { bar: { horizontal: true } }
+}))
 
 async function loadStatus() {
   const { data } = await axios.get('/api/v1/os/status', { params: { from: from.value, to: to.value } })
@@ -105,13 +116,18 @@ async function loadTmc() {
   const { data } = await axios.get('/api/v1/os/tempo-medio-conclusao', { params: { from: from.value, to: to.value } })
   tmc.value = data
 }
+async function loadTopServ() {
+  const { data } = await axios.get('/api/v1/os/top-servicos', { params: { from: from.value, to: to.value } })
+  topServLabels.value = data.map(x => x.descricao)
+  topServSeries.value = [{ name: 'Receita', data: data.map(x => x.total_receita) }]
+}
 async function loadList() {
   const { data } = await axios.get('/api/v1/os/list', { params: { from: from.value, to: to.value, status: statusFilter.value || undefined, limit: limit.value, offset: offset.value } })
   items.value = data.items
   total.value = data.total
 }
 async function loadAll() {
-  await Promise.all([loadStatus(), loadVolume(), loadTmc(), loadList()])
+  await Promise.all([loadStatus(), loadVolume(), loadTmc(), loadTopServ(), loadList()])
 }
 
 function onStatusClick(event, chartContext, config) {

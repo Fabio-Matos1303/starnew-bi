@@ -189,3 +189,55 @@ def os_list(
         for r in rows
     ]
     return OSListResponse(total=int(total or 0), items=items)
+
+
+class TopServicoItem(BaseModel):
+    descricao: str
+    ocorrencias: int
+    quantidade_total: float
+    total_receita: float
+
+
+@router.get("/top-servicos", response_model=List[TopServicoItem])
+def os_top_servicos(
+    from_: Optional[str] = Query(None, alias="from"),
+    to_: Optional[str] = Query(None, alias="to"),
+    limit: int = Query(5, ge=1, le=50),
+):
+    """Top serviços com base em itens de OS (descricao).
+
+    Agrega por descricao de itens_os, filtrando pelo período de criação da OS.
+    Ordena por receita total desc e limita resultados.
+    """
+    periodo = _parse_periodo(from_, to_)
+    filters = []
+    params: Dict[str, object] = {"limit": limit}
+    if periodo["from"]:
+        filters.append("o.created_at >= :from")
+        params["from"] = f"{periodo['from']} 00:00:00"
+    if periodo["to"]:
+        filters.append("o.created_at <= :to")
+        params["to"] = f"{periodo['to']} 23:59:59"
+    where_sql = ("WHERE " + " AND ".join(filters)) if filters else ""
+
+    sql = (
+        "SELECT i.descricao AS d, COUNT(*) AS ocorrencias, "
+        "COALESCE(SUM(i.quantidade),0) AS quantidade_total, COALESCE(SUM(i.total),0) AS total_receita "
+        "FROM itens_os i JOIN ordens_servico o ON o.id = i.os_id "
+        f"{where_sql} "
+        "GROUP BY i.descricao ORDER BY total_receita DESC, ocorrencias DESC LIMIT :limit"
+    )
+
+    engine = get_sync_engine()
+    with engine.connect() as conn:
+        rows = conn.execute(text(sql), params).mappings().all()
+
+    return [
+        TopServicoItem(
+            descricao=r["d"] or "",
+            ocorrencias=int(r["ocorrencias"] or 0),
+            quantidade_total=float(r["quantidade_total"] or 0),
+            total_receita=float(r["total_receita"] or 0),
+        )
+        for r in rows
+    ]

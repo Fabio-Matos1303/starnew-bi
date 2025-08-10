@@ -139,8 +139,15 @@ Retorna as métricas principais para o dashboard geral.
 ### GET `/api/v1/vendas/faturamento`
 Retorna dados detalhados sobre o faturamento de vendas.
 
-### GET `/api/v1/os/tempo-medio-conclusao`
-Retorna o tempo médio para concluir uma Ordem de Serviço.
+### OS — Endpoints
+
+Todos aceitam filtros `from`/`to` (YYYY-MM-DD).
+
+- `GET /api/v1/os/status` — distribuição por status.
+- `GET /api/v1/os/volume` — volume diário de OS criadas.
+- `GET /api/v1/os/tempo-medio-conclusao` — tempo médio de conclusão (dias) considerando `data_inicio` e `data_fim` apenas para status CONCLUIDA.
+- `GET /api/v1/os/list` — listagem paginada (`limit`/`offset`) com filtros de período e `status`.
+- `GET /api/v1/os/top-servicos` — top serviços (itens de OS) agregados por descrição, ordenados por receita.
 
 ---
 
