@@ -2,6 +2,7 @@ from typing import Dict, List, Optional
 from datetime import datetime, date
 
 from fastapi import APIRouter, Query, HTTPException
+from fastapi.responses import Response
 from pydantic import BaseModel
 from sqlalchemy import text
 
@@ -139,3 +140,40 @@ def top_produtos(
         )
         for r in rows
     ]
+
+
+@router.get("/export", response_class=Response)
+def export_csv(
+    from_: Optional[str] = Query(None, alias="from"),
+    to_: Optional[str] = Query(None, alias="to"),
+):
+    """Exporta itens de vendas no período em CSV (descricao, quantidade, total, data)."""
+    periodo = _parse_period(from_, to_)
+    filters = []
+    params: Dict[str, object] = {}
+    if periodo["from"]:
+        filters.append("v.created_at >= :from")
+        params["from"] = f"{periodo['from']} 00:00:00"
+    if periodo["to"]:
+        filters.append("v.created_at <= :to")
+        params["to"] = f"{periodo['to']} 23:59:59"
+    where_sql = ("WHERE " + " AND ".join(filters)) if filters else ""
+
+    sql = (
+        "SELECT iv.descricao, iv.quantidade, iv.total, v.created_at AS data "
+        "FROM itens_venda iv JOIN vendas v ON v.id = iv.venda_id "
+        f"{where_sql} ORDER BY v.created_at ASC, iv.id ASC"
+    )
+
+    engine = get_sync_engine()
+    with engine.connect() as conn:
+        rows = conn.execute(text(sql), params).mappings().all()
+
+    # Monta CSV simples
+    lines = ["descricao,quantidade,total,data"]
+    for r in rows:
+        desc = str(r["descricao"]).replace(",", " ")
+        lines.append(f"{desc},{r['quantidade']},{r['total']},{r['data']}")
+    csv_data = "\n".join(lines)
+    headers = {"Content-Type": "text/csv; charset=utf-8", "Content-Disposition": "attachment; filename=vendas.csv"}
+    return Response(content=csv_data, media_type="text/csv", headers=headers)

@@ -166,6 +166,7 @@ Todos aceitam filtros `from`/`to` (YYYY-MM-DD).
   - `por_dia`: lista de `{ dia, total }`
 - `GET /api/v1/vendas/ticket-medio` — retorna `{ ticket_medio, vendas }` (média = total/quantidade)
 - `GET /api/v1/vendas/top-produtos` — retorna lista de `{ descricao, ocorrencias, quantidade_total, total_receita }` (ordenada por receita)
+- `GET /api/v1/vendas/export` — exporta CSV de itens de venda no período (`descricao,quantidade,total,data`)
 
 ---
 
