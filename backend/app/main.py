@@ -1,19 +1,25 @@
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse
-from sqlalchemy import text
-from .core.database import get_sync_engine
-import os
+from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="Starnew BI API", version="0.1.0")
+from .core.config import settings
+from .api.v1.router import api_router_v1
 
-@app.get("/api/v1/health")
-def health():
-    # API health with soft DB check (no hard failure)
-    payload = {"status": "ok", "db": {"status": "ok"}}
-    try:
-        engine = get_sync_engine()
-        with engine.connect() as conn:
-            conn.execute(text("SELECT 1"))
-    except Exception as exc:
-        payload["db"] = {"status": "error", "detail": str(exc)}
-    return payload
+
+def create_app() -> FastAPI:
+    application = FastAPI(title=settings.api_title, version=settings.api_version)
+
+    # CORS (use wildcard by default; restrict via FRONTEND_ORIGIN if needed)
+    application.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.allowed_origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+    application.include_router(api_router_v1, prefix="/api/v1")
+
+    return application
+
+
+app = create_app()
