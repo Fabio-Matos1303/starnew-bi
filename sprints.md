@@ -27,7 +27,7 @@ Próximos itens da Sprint 1 (concluídos)
 - [x] Endpoint de “Top serviços” (itens de OS)
 - [x] Loading states/erros e polimento visual na tela de OS
 
-Sprint 2 (em andamento) — Vendas
+Sprint 2 (concluída) — Vendas e Locações
 - Backend (API):
   - `GET /api/v1/vendas/faturamento` — total e série temporal por dia
   - `GET /api/v1/vendas/ticket-medio` — média (total/quantidade de vendas)
@@ -35,11 +35,20 @@ Sprint 2 (em andamento) — Vendas
 - Frontend: Tela `/vendas` com gráficos de faturamento e “Top produtos”, KPI de ticket médio e filtros de período
 - Testes: cobertura de endpoints de vendas com engine fake
 
-Entrega parcial nesta sprint
-- API de Vendas implementada (3 endpoints) com filtros e validações
-- Tela `/vendas` implementada com KPIs e gráficos
-- Testes automatizados (13 testes) todos passando
-- Cache leve para KPI geral (TTL 60s)
+Entrega desta sprint
+- Vendas (API): faturamento, ticket médio, top produtos, exportação CSV
+- Vendas (Frontend): página `/vendas` com KPIs e gráficos
+- Locações (API): faturamento, top itens, taxa de ocupação
+- Locações (Frontend): página `/locacoes` com KPIs e gráficos
+- KPI: cache leve (TTL 60s)
+- Testes automatizados: 14 testes passando
+
+Sprint 3 (em andamento) — Performance, polimento e segurança
+- Otimizações: índices SQL sugeridos e validação de planos de consulta
+- Cache leve para endpoints de OS/Vendas/Locações mais acessados
+- Exportação CSV para OS/Locações
+- Polimento de UX (loading, vazios, mensagens) nas três telas
+- Documentação de endpoints consolidada e exemplos
 Plano de sprints (foco em valor contínuo e integrações com SINGRE)
 
   • Duração sugerida: 1 semana por sprint (ajuste conforme equipe/disponibilidade)
