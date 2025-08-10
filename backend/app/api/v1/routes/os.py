@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from typing import Dict, List, Optional
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import text
 
@@ -32,10 +32,13 @@ class TmcResponse(BaseModel):
 
 def _parse_periodo(from_: Optional[str], to_: Optional[str]) -> Dict[str, Optional[str]]:
     # Expect YYYY-MM-DD; return as strings (MySQL will parse)
-    if from_:
-        datetime.strptime(from_, "%Y-%m-%d")
-    if to_:
-        datetime.strptime(to_, "%Y-%m-%d")
+    try:
+        if from_:
+            datetime.strptime(from_, "%Y-%m-%d")
+        if to_:
+            datetime.strptime(to_, "%Y-%m-%d")
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Parâmetro de data inválido. Use YYYY-MM-DD")
     return {"from": from_, "to": to_}
 
 
@@ -162,8 +165,9 @@ def os_list(
         filters.append("created_at <= :to")
         params["to"] = f"{periodo['to']} 23:59:59"
     if status:
+        normalized = status.strip().upper()
         filters.append("UPPER(status) = :status")
-        params["status"] = status.strip().upper()
+        params["status"] = normalized
     where_sql = ("WHERE " + " AND ".join(filters)) if filters else ""
 
     engine = get_sync_engine()

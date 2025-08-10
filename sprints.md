@@ -22,10 +22,10 @@ Incrementos adicionais nesta sprint
 - Tela `Home` com KPIs gerais e filtros de período
 
 Próximos itens da Sprint 1
-- Schemas Pydantic públicos/documentação no README
-- Validação e normalização de parâmetros (ex.: status)
-- Endpoint de “Top serviços” (a depender do modelo de itens de OS)
-- Loading states/erros e polimento visual na tela de OS
+- [x] Schemas Pydantic públicos/documentação no README (KPI)
+- [x] Validação e normalização de parâmetros (datas e status em OS)
+- [x] Endpoint de “Top serviços” (itens de OS)
+- [x] Loading states/erros e polimento visual na tela de OS
 Plano de sprints (foco em valor contínuo e integrações com SINGRE)
 
   • Duração sugerida: 1 semana por sprint (ajuste conforme equipe/disponibilidade)

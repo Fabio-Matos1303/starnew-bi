@@ -149,6 +149,14 @@ Todos aceitam filtros `from`/`to` (YYYY-MM-DD).
 - `GET /api/v1/os/list` — listagem paginada (`limit`/`offset`) com filtros de período e `status`.
 - `GET /api/v1/os/top-servicos` — top serviços (itens de OS) agregados por descrição, ordenados por receita.
 
+### KPI — Endpoints
+
+- `GET /api/v1/kpi/geral` — retorna objeto com:
+  - `receita_total` (soma de vendas + OS + locações no período)
+  - `participacao` (objeto com chaves `vendas`, `os`, `locacoes`)
+  - `novos_clientes` (contagem)
+  - `os_status` (mapa status → quantidade)
+
 ---
 
 ## Sugestões de Próximos Passos

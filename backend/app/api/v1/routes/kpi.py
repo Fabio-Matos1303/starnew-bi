@@ -1,10 +1,16 @@
 from typing import Dict, Optional
+from pydantic import BaseModel
 from fastapi import APIRouter, Query
 from sqlalchemy import text
 
 from ....core.database import get_sync_engine
 
 router = APIRouter(prefix="/kpi")
+class KpiGeralResponse(BaseModel):
+    receita_total: float
+    participacao: Dict[str, float]
+    novos_clientes: int
+    os_status: Dict[str, int]
 
 
 def _period_clause(column: str, from_: Optional[str], to_: Optional[str], params: Dict[str, str]) -> str:
@@ -18,7 +24,7 @@ def _period_clause(column: str, from_: Optional[str], to_: Optional[str], params
     return ("WHERE " + " AND ".join(clauses)) if clauses else ""
 
 
-@router.get("/geral")
+@router.get("/geral", response_model=KpiGeralResponse)
 def kpi_geral(
     from_: Optional[str] = Query(None, alias="from"),
     to_: Optional[str] = Query(None, alias="to"),
