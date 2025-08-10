@@ -34,6 +34,11 @@ Sprint 2 (em andamento) — Vendas
   - `GET /api/v1/vendas/top-produtos` — agregação por item de venda
 - Frontend: Tela `/vendas` com gráficos de faturamento e “Top produtos”, KPI de ticket médio e filtros de período
 - Testes: cobertura de endpoints de vendas com engine fake
+
+Entrega parcial nesta sprint
+- API de Vendas implementada (3 endpoints) com filtros e validações
+- Tela `/vendas` implementada com KPIs e gráficos
+- Testes automatizados (10 testes) todos passando
 Plano de sprints (foco em valor contínuo e integrações com SINGRE)
 
   • Duração sugerida: 1 semana por sprint (ajuste conforme equipe/disponibilidade)

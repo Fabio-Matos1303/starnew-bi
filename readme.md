@@ -157,6 +157,16 @@ Todos aceitam filtros `from`/`to` (YYYY-MM-DD).
   - `novos_clientes` (contagem)
   - `os_status` (mapa status → quantidade)
 
+### Vendas — Endpoints
+
+Todos aceitam filtros `from`/`to` (YYYY-MM-DD).
+
+- `GET /api/v1/vendas/faturamento` — retorna:
+  - `total`: soma do período
+  - `por_dia`: lista de `{ dia, total }`
+- `GET /api/v1/vendas/ticket-medio` — retorna `{ ticket_medio, vendas }` (média = total/quantidade)
+- `GET /api/v1/vendas/top-produtos` — retorna lista de `{ descricao, ocorrencias, quantidade_total, total_receita }` (ordenada por receita)
+
 ---
 
 ## Sugestões de Próximos Passos
