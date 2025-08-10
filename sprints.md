@@ -19,7 +19,7 @@ Sprint 1 (em andamento) — Base de API e OS
 
 Incrementos adicionais nesta sprint
 - Endpoint `GET /api/v1/kpi/geral` (receita total, participação, novos clientes, status de OS)
-- Tela `Home` com KPIs gerais e filtros de período
+- Tela `Home` com KPIs gerais e filtros de período; gráficos de participação e status de OS
 
 Próximos itens da Sprint 1
 - [x] Schemas Pydantic públicos/documentação no README (KPI)
