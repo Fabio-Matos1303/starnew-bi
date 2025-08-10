@@ -7,7 +7,7 @@ Sprint 0 (concluída)
 - Integração de rede com `singre-docker` (`singre-docker_default`)
 - Healthcheck `/api/v1/health` com verificação opcional do MySQL (read-only)
 
-Sprint 1 (em andamento) — Base de API e OS
+Sprint 1 (concluída) — Base de API e OS
 - Estrutura da API v1 com roteador modular e CORS
 - Endpoints OS:
   - `GET /api/v1/os/status` — distribuição por status (filtros `from`/`to`)
@@ -17,15 +17,23 @@ Sprint 1 (em andamento) — Base de API e OS
 - Frontend: Tela `/os` com gráficos (ApexCharts) e listagem com paginação; filtros de período e drill‑down por status
 - CI: workflow com build frontend e testes backend (pytest)
 
-Incrementos adicionais nesta sprint
+Incrementos desta sprint
 - Endpoint `GET /api/v1/kpi/geral` (receita total, participação, novos clientes, status de OS)
 - Tela `Home` com KPIs gerais e filtros de período; gráficos de participação e status de OS
 
-Próximos itens da Sprint 1
+Próximos itens da Sprint 1 (concluídos)
 - [x] Schemas Pydantic públicos/documentação no README (KPI)
 - [x] Validação e normalização de parâmetros (datas e status em OS)
 - [x] Endpoint de “Top serviços” (itens de OS)
 - [x] Loading states/erros e polimento visual na tela de OS
+
+Sprint 2 (em andamento) — Vendas
+- Backend (API):
+  - `GET /api/v1/vendas/faturamento` — total e série temporal por dia
+  - `GET /api/v1/vendas/ticket-medio` — média (total/quantidade de vendas)
+  - `GET /api/v1/vendas/top-produtos` — agregação por item de venda
+- Frontend: Tela `/vendas` com gráficos de faturamento e “Top produtos”, KPI de ticket médio e filtros de período
+- Testes: cobertura de endpoints de vendas com engine fake
 Plano de sprints (foco em valor contínuo e integrações com SINGRE)
 
   • Duração sugerida: 1 semana por sprint (ajuste conforme equipe/disponibilidade)
