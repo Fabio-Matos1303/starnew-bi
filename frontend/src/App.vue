@@ -4,6 +4,7 @@
     <nav style="margin: 12px 0; display:flex; gap:12px">
       <router-link to="/">Home</router-link>
       <router-link to="/os">OS</router-link>
+      <router-link to="/vendas">Vendas</router-link>
     </nav>
     <router-view />
   </div>
