@@ -5,6 +5,7 @@
       <router-link to="/">Home</router-link>
       <router-link to="/os">OS</router-link>
       <router-link to="/vendas">Vendas</router-link>
+      <router-link to="/locacoes">Locações</router-link>
     </nav>
     <router-view />
   </div>
