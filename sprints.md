@@ -17,6 +17,10 @@ Sprint 1 (em andamento) — Base de API e OS
 - Frontend: Tela `/os` com gráficos (ApexCharts) e listagem com paginação; filtros de período e drill‑down por status
 - CI: workflow com build frontend e testes backend (pytest)
 
+Incrementos adicionais nesta sprint
+- Endpoint `GET /api/v1/kpi/geral` (receita total, participação, novos clientes, status de OS)
+- Tela `Home` com KPIs gerais e filtros de período
+
 Próximos itens da Sprint 1
 - Schemas Pydantic públicos/documentação no README
 - Validação e normalização de parâmetros (ex.: status)
