@@ -1,3 +1,27 @@
+Starnew BI — Progresso de Sprints
+
+Sprint 0 (concluída)
+- Infra base: backend FastAPI 3.11 e frontend Vue 3 com Vite
+- Nginx servindo build do frontend e proxy para `/api`
+- Compose com serviços `backend` e `frontend`
+- Integração de rede com `singre-docker` (`singre-docker_default`)
+- Healthcheck `/api/v1/health` com verificação opcional do MySQL (read-only)
+
+Sprint 1 (em andamento) — Base de API e OS
+- Estrutura da API v1 com roteador modular e CORS
+- Endpoints OS:
+  - `GET /api/v1/os/status` — distribuição por status (filtros `from`/`to`)
+  - `GET /api/v1/os/volume` — volume diário (filtros `from`/`to`)
+  - `GET /api/v1/os/tempo-medio-conclusao` — TMC (filtros `from`/`to`)
+  - `GET /api/v1/os/list` — listagem paginada por período e status
+- Frontend: Tela `/os` com gráficos (ApexCharts) e listagem com paginação; filtros de período e drill‑down por status
+- CI: workflow com build frontend e testes backend (pytest)
+
+Próximos itens da Sprint 1
+- Schemas Pydantic públicos/documentação no README
+- Validação e normalização de parâmetros (ex.: status)
+- Endpoint de “Top serviços” (a depender do modelo de itens de OS)
+- Loading states/erros e polimento visual na tela de OS
 Plano de sprints (foco em valor contínuo e integrações com SINGRE)
 
   • Duração sugerida: 1 semana por sprint (ajuste conforme equipe/disponibilidade)

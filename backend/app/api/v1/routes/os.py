@@ -128,3 +128,64 @@ def os_tempo_medio_conclusao(
     dias = float(row["dias"]) if row and row["dias"] is not None else None
     amostras = int(row["n"]) if row else 0
     return TmcResponse(dias=dias, amostras=amostras)
+
+
+class OSListItem(BaseModel):
+    id: int
+    descricao: str
+    status: str
+    data_inicio: Optional[date]
+    data_fim: Optional[date]
+    valor_total: float
+
+
+class OSListResponse(BaseModel):
+    total: int
+    items: List[OSListItem]
+
+
+@router.get("/list", response_model=OSListResponse)
+def os_list(
+    from_: Optional[str] = Query(None, alias="from"),
+    to_: Optional[str] = Query(None, alias="to"),
+    status: Optional[str] = Query(None, description="Filtra por status, ex.: ABERTA/CONCLUIDA"),
+    limit: int = Query(20, ge=1, le=200),
+    offset: int = Query(0, ge=0),
+):
+    periodo = _parse_periodo(from_, to_)
+    filters = []
+    params: Dict[str, object] = {"limit": limit, "offset": offset}
+    if periodo["from"]:
+        filters.append("created_at >= :from")
+        params["from"] = f"{periodo['from']} 00:00:00"
+    if periodo["to"]:
+        filters.append("created_at <= :to")
+        params["to"] = f"{periodo['to']} 23:59:59"
+    if status:
+        filters.append("UPPER(status) = :status")
+        params["status"] = status.strip().upper()
+    where_sql = ("WHERE " + " AND ".join(filters)) if filters else ""
+
+    engine = get_sync_engine()
+    with engine.connect() as conn:
+        total = conn.execute(text(f"SELECT COUNT(*) FROM ordens_servico {where_sql}"), params).scalar_one()
+        rows = conn.execute(
+            text(
+                f"SELECT id, descricao, status, data_inicio, data_fim, valor_total "
+                f"FROM ordens_servico {where_sql} ORDER BY id DESC LIMIT :limit OFFSET :offset"
+            ),
+            params,
+        ).mappings().all()
+
+    items = [
+        OSListItem(
+            id=int(r["id"]),
+            descricao=r["descricao"],
+            status=r["status"],
+            data_inicio=r.get("data_inicio"),
+            data_fim=r.get("data_fim"),
+            valor_total=float(r["valor_total"] or 0),
+        )
+        for r in rows
+    ]
+    return OSListResponse(total=int(total or 0), items=items)
